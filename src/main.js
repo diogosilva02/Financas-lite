@@ -10,6 +10,20 @@ function financas() {
 
   const transacoes = [];
   let idEmEdicao = null;
+  carregarTransacao();
+  renderizarLista();
+
+  function salvarTransacao() {
+    localStorage.setItem("transacoes", JSON.stringify(transacoes));
+  }
+
+  function carregarTransacao() {
+    const transacoesSalvas = localStorage.getItem("transacoes");
+
+    if (transacoesSalvas) {
+      transacoes.push(...JSON.parse(transacoesSalvas));
+    }
+  }
 
   function criarTransacao(dados) {
     return {
@@ -95,6 +109,8 @@ function financas() {
 
       transacoes.splice(indiceReal, 1);
 
+      salvarTransacao();
+
       renderizarLista();
     }
   });
@@ -123,6 +139,8 @@ function financas() {
     }
 
     idEmEdicao = null;
+
+    salvarTransacao();
 
     form.reset();
     renderizarLista();

@@ -3,28 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
     <title>Financas Lite</title>
   </head>
   <body>
-    <form id="formTransacao">
-      <input type="text" placeholder="descricao" id="descricao" />
-      <input type="text" placeholder="valor" id="valor" />
-      <select name="tipo" id="tipo">
-        <option value="" disabled selected>Selecione um tipo</option>
-        <option value="saida">Saida</option>
-      </select>
-      <select name="categoria" id="categoria">
-        <option value="" disabled selected>Selecione a categoria</option>
-        <option value="alimentacao">Alimentacao</option>
-      </select>
-      <input type="date" placeholder="data" id="data" />
+    <div class="app">
+      <form id="formTransacao">
+        <input type="text" placeholder="descricao" id="descricao" />
+        <input type="text" placeholder="valor" id="valor" />
+        <select name="tipo" id="tipo">
+          <option value="" disabled selected>Selecione um tipo</option>
+          <option value="saida">Saida</option>
+        </select>
+        <select name="categoria" id="categoria">
+          <option value="" disabled selected>Selecione a categoria</option>
+          <option value="alimentacao">Alimentacao</option>
+        </select>
+        <input type="date" placeholder="data" id="data" />
 
-      <button type="submit">Salvar</button>
-    </form>
+        <button type="submit">Salvar</button>
+      </form>
 
-    <p id="msg"></p>
+      <p id="msg"></p>
 
-    <ul id="listaTransacoes"></ul>
+      <ul id="listaTransacoes"></ul>
+    </div>
 
     <script src="src/main.js"></script>
   </body>

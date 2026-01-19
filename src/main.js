@@ -9,6 +9,7 @@ function financas() {
   const mensagem = document.querySelector("#msg");
 
   const transacoes = [];
+  let idEmEdicao = null;
 
   function criarTransacao(dados) {
     return {
@@ -40,16 +41,63 @@ function financas() {
     return true;
   }
 
+  function preencherFormulario(transacao) {
+    descricaoInput.value = transacao.descricao;
+    valorInput.value = transacao.valor;
+    tipoInput.value = transacao.tipo;
+    categoriaInput.value = transacao.categoria;
+    dataInput.value = transacao.data;
+  }
+
   function renderizarLista() {
     lista.innerHTML = "";
 
     transacoes.forEach((obj) => {
       const li = document.createElement("li");
-      li.textContent = `${obj.descricao} - R$ ${obj.valor} - ${obj.tipo}`;
+      li.textContent = `${obj.descricao} - R$ ${obj.valor} - ${obj.tipo} `;
 
+      const btnRemover = document.createElement("button");
+      btnRemover.textContent = "Remover";
+      btnRemover.dataset.id = obj.id;
+      btnRemover.dataset.acao = "remover";
+
+      const btnEditar = document.createElement("button");
+      btnEditar.textContent = "Editar";
+      btnEditar.dataset.id = obj.id;
+      btnEditar.dataset.acao = "editar";
+
+      li.appendChild(btnEditar);
+      li.appendChild(btnRemover);
       lista.appendChild(li);
     });
   }
+
+  lista.addEventListener("click", (e) => {
+    if (!e.target.matches("button")) return;
+
+    const id = e.target.dataset.id;
+    const acao = e.target.dataset.acao;
+
+    if (acao === "editar") {
+      const editTrans = transacoes.find((t) => t.id === id);
+      if (!editTrans) return;
+
+      idEmEdicao = id;
+
+      preencherFormulario(editTrans);
+
+      return;
+    }
+
+    if (acao === "remover") {
+      const indiceReal = transacoes.findIndex((transfer) => transfer.id === id);
+      if (indiceReal === -1) return;
+
+      transacoes.splice(indiceReal, 1);
+
+      renderizarLista();
+    }
+  });
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -62,13 +110,22 @@ function financas() {
       return;
     }
 
-    const transacao = criarTransacao(dados);
-    transacoes.push(transacao);
-    renderizarLista();
+    mensagem.textContent = "";
+
+    if (idEmEdicao === null) {
+      const transacao = criarTransacao(dados);
+      transacoes.push(transacao);
+    } else {
+      const indice = transacoes.findIndex((i) => i.id === idEmEdicao);
+      if (indice === -1) return;
+
+      transacoes[indice] = { ...transacoes[indice], ...dados };
+    }
+
+    idEmEdicao = null;
 
     form.reset();
-
-    console.log(transacoes);
+    renderizarLista();
   });
 }
 

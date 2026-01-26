@@ -7,18 +7,21 @@ function financas() {
   const dataInput = form.querySelector("#data");
   const lista = document.querySelector("#listaTransacoes");
   const mensagem = document.querySelector("#msg");
+  const titleForm = document.querySelector("#tituloForm");
+  const btnCancelar = form.querySelector("#btnCancelar");
 
   const transacoes = [];
   let idEmEdicao = null;
+  const STORAGE_KEY = "transacoes";
   carregarTransacao();
   renderizarLista();
 
   function salvarTransacao() {
-    localStorage.setItem("transacoes", JSON.stringify(transacoes));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(transacoes));
   }
 
   function carregarTransacao() {
-    const transacoesSalvas = localStorage.getItem("transacoes");
+    const transacoesSalvas = localStorage.getItem(STORAGE_KEY);
 
     if (transacoesSalvas) {
       transacoes.push(...JSON.parse(transacoesSalvas));
@@ -63,12 +66,57 @@ function financas() {
     dataInput.value = transacao.data;
   }
 
+  function sairModoEdicao() {
+    titleForm.textContent = "Nova transação";
+    titleForm.classList.remove("editando");
+  }
+
+  function entrarModoEdicao() {
+    titleForm.textContent = "Editando";
+    titleForm.classList.add("editando");
+  }
+
   function renderizarLista() {
     lista.innerHTML = "";
 
-    transacoes.forEach((obj) => {
+    const listaParaRenderizar = [...transacoes].sort((a, b) =>
+      a.data < b.data ? 1 : -1,
+    );
+
+    listaParaRenderizar.forEach((obj) => {
       const li = document.createElement("li");
-      li.textContent = `${obj.descricao} - R$ ${obj.valor} - ${obj.tipo} `;
+      li.classList.add("item");
+
+      const info = document.createElement("div");
+      info.classList.add("info");
+
+      const span = document.createElement("span");
+      span.classList.add("descricao");
+      span.textContent = `${obj.descricao}`;
+
+      const small = document.createElement("small");
+      small.classList.add("meta");
+      small.textContent = ` ${obj.categoria} • ${obj.data}`;
+
+      const acoes = document.createElement("div");
+      acoes.classList.add("acoes");
+
+      const valor = document.createElement("span");
+      valor.classList.add("valor");
+      valor.textContent = `R$ ${obj.valor} `;
+
+      const tipo = document.createElement("span");
+      tipo.classList.add("tipo");
+      tipo.textContent = ` ${obj.tipo}`;
+
+      if (obj.tipo === "entrada") {
+        tipo.classList.add("entrada");
+      } else if (obj.tipo === "saida") {
+        tipo.classList.add("saida");
+      }
+
+      const buttons = document.createElement("div");
+      buttons.classList.add("botoes");
 
       const btnRemover = document.createElement("button");
       btnRemover.textContent = "Remover";
@@ -80,8 +128,16 @@ function financas() {
       btnEditar.dataset.id = obj.id;
       btnEditar.dataset.acao = "editar";
 
-      li.appendChild(btnEditar);
-      li.appendChild(btnRemover);
+      buttons.appendChild(btnEditar);
+      buttons.appendChild(btnRemover);
+      acoes.appendChild(valor);
+      acoes.appendChild(tipo);
+      acoes.appendChild(buttons);
+
+      info.appendChild(span);
+      info.appendChild(small);
+      li.appendChild(info);
+      li.appendChild(acoes);
       lista.appendChild(li);
     });
   }
@@ -97,6 +153,7 @@ function financas() {
       if (!editTrans) return;
 
       idEmEdicao = id;
+      entrarModoEdicao();
 
       preencherFormulario(editTrans);
 
@@ -139,11 +196,20 @@ function financas() {
     }
 
     idEmEdicao = null;
+    sairModoEdicao();
 
     salvarTransacao();
 
     form.reset();
+
     renderizarLista();
+  });
+
+  btnCancelar.addEventListener("click", () => {
+    idEmEdicao = null;
+    sairModoEdicao();
+    form.reset();
+    mensagem.textContent = "";
   });
 }
 

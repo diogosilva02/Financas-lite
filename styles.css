@@ -1,0 +1,283 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #0f172a; /* dark azul */
+  color: #e5e7eb; /* cinza claro */
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+}
+
+.app {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.painel {
+  background-color: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 14px;
+  padding: 16px;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+#listaTransacoes {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+
+  background-color: #0b1220;
+  border: 1px solid #1f2937;
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.descricao {
+  font-weight: 600;
+}
+
+.meta {
+  font-size: 12px;
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
+.acoes {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.valor {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tipo {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #334155;
+  opacity: 0.9;
+  text-transform: lowercase;
+}
+
+.tipo.entrada {
+  border-color: #14532d;
+}
+
+.tipo.saida {
+  border-color: #7f1d1d;
+}
+
+.botoes {
+  display: flex;
+  gap: 8px;
+}
+
+.botoes button {
+  background-color: transparent;
+  border: 1px solid #334155;
+  color: #e5e7eb;
+  padding: 6px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.botoes button:hover {
+  border-color: #64748b;
+}
+
+#formTransacao {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+#descricao {
+  grid-column: 1 / -1;
+}
+
+#formTransacao input,
+#formTransacao select {
+  width: 100%;
+  background-color: #0b1220;
+  border: 1px solid #1f2937;
+  color: #e5e7eb;
+  border-radius: 12px;
+  padding: 10px 12px;
+  outline: none;
+}
+
+#formTransacao input:focus,
+#formTransacao select:focus {
+  border-color: #475569;
+}
+
+#formTransacao button {
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  border: 1px solid #334155;
+  background-color: #111827;
+  color: #e5e7eb;
+}
+
+#formTransacao button[type="submit"] {
+  grid-column: 1 / 2;
+}
+
+#btnCancelar {
+  grid-column: 2 / 3;
+}
+
+#formTransacao button:hover {
+  border-color: #64748b;
+}
+
+#btnCancelar {
+  display: none;
+}
+
+#formTransacao.editando #btnCancelar {
+  display: inline-block;
+}
+
+#formTransacao.editando {
+  border: 1px solid #334155;
+  border-radius: 14px;
+  padding: 12px;
+  background-color: rgba(17, 24, 39, 0.6);
+}
+
+@media (max-width: 700px) {
+  #formTransacao {
+    grid-template-columns: 1fr;
+  }
+
+  #formTransacao button[type="submit"],
+  #btnCancelar {
+    grid-column: 1 / -1;
+  }
+}
+
+#tituloForm {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: 0.2px;
+}
+
+#tituloForm::after {
+  content: "";
+  display: block;
+  margin-top: 10px;
+  height: 1px;
+  background-color: #1f2937;
+}
+
+#formTransacao.editando ~ #msg {
+  opacity: 1;
+}
+
+.tipo.entrada {
+  border-color: #14532d;
+  background-color: rgba(34, 197, 94, 0.12);
+}
+
+.tipo.saida {
+  border-color: #7f1d1d;
+  background-color: rgba(239, 68, 68, 0.12);
+}
+
+.valor.entrada {
+  color: rgba(34, 197, 94, 0.95);
+}
+
+.valor.saida {
+  color: rgba(239, 68, 68, 0.95);
+}
+
+.item {
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.item:hover {
+  border-color: #334155;
+  transform: translateY(-1px);
+}
+
+.botoes button {
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.botoes button:hover {
+  transform: translateY(-1px);
+}
+
+.app-subtitle.editando {
+  color: rgba(56, 189, 248, 0.95);
+  opacity: 1;
+}
+
+.header {
+  margin-bottom: 18px;
+}
+
+.app-title {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+}
+
+.app-subtitle {
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.75;
+  margin-top: 4px;
+}
+
+.header::after {
+  content: "";
+  display: block;
+  margin-top: 14px;
+  height: 1px;
+  background-color: #1f2937;
+}

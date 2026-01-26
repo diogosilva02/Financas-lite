@@ -8,25 +8,38 @@
   </head>
   <body>
     <div class="app">
-      <form id="formTransacao">
-        <input type="text" placeholder="descricao" id="descricao" />
-        <input type="text" placeholder="valor" id="valor" />
-        <select name="tipo" id="tipo">
-          <option value="" disabled selected>Selecione um tipo</option>
-          <option value="saida">Saida</option>
-        </select>
-        <select name="categoria" id="categoria">
-          <option value="" disabled selected>Selecione a categoria</option>
-          <option value="alimentacao">Alimentacao</option>
-        </select>
-        <input type="date" placeholder="data" id="data" />
+      <div class="header">
+        <h1 class="app-title">Finanças Lite</h1>
+        <h3 id="tituloForm" class="app-subtitle">Nova transação</h3>
+      </div>
 
-        <button type="submit">Salvar</button>
-      </form>
+      <div class="layout">
+        <section class="painel">
+          <form id="formTransacao">
+            <input type="text" placeholder="descricao" id="descricao" />
+            <input type="text" placeholder="valor" id="valor" />
+            <select name="tipo" id="tipo">
+              <option value="" disabled selected>Selecione um tipo</option>
+              <option value="saida">Saida</option>
+              <option value="entrada">Entrada</option>
+            </select>
+            <select name="categoria" id="categoria">
+              <option value="" disabled selected>Categoria</option>
+              <option value="alimentacao">Alimentacao</option>
+            </select>
+            <input type="date" placeholder="data" id="data" />
 
-      <p id="msg"></p>
+            <button type="submit">Salvar</button>
+            <button type="button" id="btnCancelar">Cancelar</button>
+          </form>
 
-      <ul id="listaTransacoes"></ul>
+          <p id="msg"></p>
+        </section>
+
+        <section class="painel">
+          <ul id="listaTransacoes"></ul>
+        </section>
+      </div>
     </div>
 
     <script src="src/main.js"></script>

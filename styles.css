@@ -281,3 +281,40 @@ body {
   height: 1px;
   background-color: #1f2937;
 }
+
+.resumo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.card-resumo {
+  background-color: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.card-resumo p {
+  font-size: 12px;
+  opacity: 0.75;
+  margin-bottom: 8px;
+}
+
+.card-resumo h3 {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.saldo-positivo {
+  color: rgba(34, 197, 94, 0.95);
+}
+
+.saldo-negativo {
+  color: rgba(239, 68, 68, 0.95);
+}
+
+@media (max-width: 900px) {
+  .resumo { grid-template-columns: 1fr; }
+}

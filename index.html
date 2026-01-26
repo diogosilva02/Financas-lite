@@ -13,6 +13,23 @@
         <h3 id="tituloForm" class="app-subtitle">Nova transação</h3>
       </div>
 
+      <section class="resumo">
+        <div class="card-resumo">
+          <p>Entradas</p>
+          <h3 id="totalEntradas">R$ 0</h3>
+        </div>
+
+        <div class="card-resumo">
+          <p>Saídas</p>
+          <h3 id="totalSaidas">R$ 0</h3>
+        </div>
+
+        <div class="card-resumo">
+          <p>Saldo</p>
+          <h3 id="saldoTotal">R$ 0</h3>
+        </div>
+      </section>
+
       <div class="layout">
         <section class="painel">
           <form id="formTransacao">
@@ -26,6 +43,15 @@
             <select name="categoria" id="categoria">
               <option value="" disabled selected>Categoria</option>
               <option value="alimentacao">Alimentacao</option>
+              <option value="moradia">Moradia</option>
+              <option value="transporte">Transporte</option>
+              <option value="saude">Saude</option>
+              <option value="educacao">Educação</option>
+              <option value="lazer">Lazer</option>
+              <option value="assinaturas">Assinaturas</option>
+              <option value="contas-fixas">Contas Fixas</option>
+              <option value="salario">Salário</option>
+              <option value="outros">Outros</option>
             </select>
             <input type="date" placeholder="data" id="data" />
 

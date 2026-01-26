@@ -9,12 +9,16 @@ function financas() {
   const mensagem = document.querySelector("#msg");
   const titleForm = document.querySelector("#tituloForm");
   const btnCancelar = form.querySelector("#btnCancelar");
+  const totalEntradas = document.querySelector("#totalEntradas");
+  const totalSaidas = document.querySelector("#totalSaidas");
+  const totalSaldo = document.querySelector("#saldoTotal");
 
   const transacoes = [];
   let idEmEdicao = null;
   const STORAGE_KEY = "transacoes";
   carregarTransacao();
   renderizarLista();
+  atualizarResumo();
 
   function salvarTransacao() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(transacoes));
@@ -142,6 +146,41 @@ function financas() {
     });
   }
 
+  function formatarMoeda(valor) {
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(valor);
+  }
+
+  function atualizarResumo() {
+    let entradas = 0;
+    let saidas = 0;
+
+    transacoes.forEach((obj) => {
+      if (obj.tipo === "entrada") {
+        entradas += obj.valor;
+      }
+
+      if (obj.tipo === "saida") {
+        saidas += obj.valor;
+      }
+    });
+
+    let saldo = entradas - saidas;
+
+    totalSaldo.classList.remove("saldo-positivo");
+    totalSaldo.classList.remove("saldo-negativo");
+
+    saldo >= 0
+      ? totalSaldo.classList.add("saldo-positivo")
+      : totalSaldo.classList.add("saldo-negativo");
+
+    totalEntradas.textContent = formatarMoeda(entradas);
+    totalSaidas.textContent = formatarMoeda(saidas);
+    totalSaldo.textContent = formatarMoeda(saldo);
+  }
+
   lista.addEventListener("click", (e) => {
     if (!e.target.matches("button")) return;
 
@@ -169,6 +208,7 @@ function financas() {
       salvarTransacao();
 
       renderizarLista();
+      atualizarResumo();
     }
   });
 
@@ -203,6 +243,7 @@ function financas() {
     form.reset();
 
     renderizarLista();
+    atualizarResumo();
   });
 
   btnCancelar.addEventListener("click", () => {

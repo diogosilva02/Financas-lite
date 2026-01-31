@@ -72,12 +72,12 @@ function financas() {
 
   function sairModoEdicao() {
     titleForm.textContent = "Nova transação";
-    titleForm.classList.remove("editando");
+    form.classList.remove("editando");
   }
 
   function entrarModoEdicao() {
     titleForm.textContent = "Editando";
-    titleForm.classList.add("editando");
+    form.classList.add("editando");
   }
 
   function renderizarLista() {

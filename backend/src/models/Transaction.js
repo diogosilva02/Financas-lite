@@ -4,6 +4,7 @@ const transactionSchema = new mongoose.Schema({
   descricao: { type: String },
   valor: { type: Number },
   tipo: { type: String, enum: ["entrada", "saida"], required: true },
+  categoria: { type: String, required: true, trim: true},
   data: { type: Date },
   createdAt: { type: Date, default: Date.now },
 });

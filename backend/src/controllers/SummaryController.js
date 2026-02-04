@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 
 async function get(req, res) {
   try {
-    const userId = mongoose.Types.ObjectId(req.user.id);
+    const userId = new mongoose.Types.ObjectId(req.user.id);
 
     const pipeline = [
       { $match: { userId } },
@@ -24,6 +24,7 @@ async function get(req, res) {
 
     return res.json({ entradas, saidas, saldo });
   } catch (error) {
+    
     return res.status(500).json({ erro: "Erro na base de dados" });
   }
 }

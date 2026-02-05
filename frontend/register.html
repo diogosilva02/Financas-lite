@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="./src/main.css" />
+    <link rel="stylesheet" href="./src/login.css" />
+
+    <title>Resgistre-se Financas Lite</title>
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <h1 class="app-title">Finanças Lite</h1>
+        <p class="app-subtitle">Acesse sua conta</p>
+      </header>
+
+      <div class="layout login-layout">
+        <section class="painel login-painel">
+          <h3 id="tituloForm">Criar Conta</h3>
+
+          <form id="formLogin" class="login-form">
+            <input id="name" type="text" placeholder="Nome" required />
+            <input id="email" type="email" placeholder="Email" required />
+            <input id="password" type="password" placeholder="Senha" required />
+            <input
+              id="confirmPassword"
+              type="password"
+              placeholder="Confirmar senha"
+            />
+
+            <button type="submit">Salvar</button>
+          </form>
+
+          <p id="msg" class="login-msg"></p>
+        </section>
+      </div>
+    </div>
+
+    <script src="./src/register.js"></script>
+  </body>
+</html>

@@ -181,7 +181,7 @@ body {
 }
 
 #formTransacao.editando {
-  border: 1px solid #334155;
+  border: 1px solid #2d3949;
   border-radius: 14px;
   padding: 12px;
   background-color: rgba(17, 24, 39, 0.6);
@@ -236,7 +236,9 @@ body {
 }
 
 .item {
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    transform 0.15s ease;
 }
 
 .item:hover {
@@ -245,16 +247,13 @@ body {
 }
 
 .botoes button {
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    transform 0.15s ease;
 }
 
 .botoes button:hover {
   transform: translateY(-1px);
-}
-
-.app-subtitle.editando {
-  color: rgba(56, 189, 248, 0.95);
-  opacity: 1;
 }
 
 .header {
@@ -276,10 +275,23 @@ body {
 
 .header::after {
   content: "";
-  display: block;
+  display: flex;
   margin-top: 14px;
   height: 1px;
   background-color: #1f2937;
+}
+
+.header-flex {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .resumo {
@@ -316,5 +328,24 @@ body {
 }
 
 @media (max-width: 900px) {
-  .resumo { grid-template-columns: 1fr; }
+  .resumo {
+    grid-template-columns: 1fr;
+  }
+}
+
+.btn-logout {
+  background-color: transparent;
+  border: 1px solid #334155;
+  color: rgba(239, 68, 68, 0.95);
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 13px;
+  opacity: 0.85;
+  margin-left: auto;
+}
+
+.btn-logout:hover {
+  border-color: #64748b;
+  opacity: 1;
 }

@@ -1,0 +1,68 @@
+/* ====== Login page tweaks (reusa o tema do app) ====== */
+.login-layout {
+  grid-template-columns: 1fr; /* quebra o layout 2 colunas */
+  justify-items: center; /* centraliza o painel */
+}
+
+.login-painel {
+  max-width: 500px;
+}
+
+.login-form {
+  display: grid;
+  gap: 10px;
+}
+
+/* reaproveita o mesmo estilo do form do app, só que pro login */
+#formLogin input {
+  width: 100%;
+  background-color: #0b1220;
+  border: 1px solid #1f2937;
+  color: #e5e7eb;
+  border-radius: 12px;
+  padding: 10px 12px;
+  outline: none;
+}
+
+#formLogin input:focus {
+  border-color: #475569;
+}
+
+#formLogin button {
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  border: 1px solid #334155;
+  background-color: #111827;
+  color: #e5e7eb;
+  margin-top: 30px;
+}
+
+#formLogin button:hover {
+  border-color: #64748b;
+}
+
+.login-msg {
+  min-height: 18px;
+  margin-top: 10px;
+  font-size: 13px;
+  opacity: 0.85;
+  color: rgba(239, 68, 68, 0.95); /* vermelho igual vibe do app */
+  text-align: center;
+}
+
+.register-link {
+  margin-top: 12px;
+  font-size: 13px;
+  text-align: center;
+  opacity: 0.8;
+}
+
+.register-link a {
+  color: #38bdf8;
+  text-decoration: none;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}

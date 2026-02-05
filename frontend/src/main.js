@@ -1,4 +1,27 @@
-function financas() {
+const API_BASE = "http://localhost:3000";
+
+async function init() {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  const res = await fetch(`${API_BASE}/me`, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!res.ok) {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+    return;
+  }
+
+  financas(token);
+}
+
+function financas(token) {
   const form = document.querySelector("#formTransacao");
   const descricaoInput = form.querySelector("#descricao");
   const valorInput = form.querySelector("#valor");
@@ -12,35 +35,46 @@ function financas() {
   const totalEntradas = document.querySelector("#totalEntradas");
   const totalSaidas = document.querySelector("#totalSaidas");
   const totalSaldo = document.querySelector("#saldoTotal");
+  const btnLogout = document.querySelector("#btnLogout");
 
   const transacoes = [];
   let idEmEdicao = null;
-  const STORAGE_KEY = "transacoes";
-  carregarTransacao();
   renderizarLista();
-  atualizarResumo();
+  carregarTransacao(token);
+  carregarResumo(token);
 
-  function salvarTransacao() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(transacoes));
-  }
+  function logout(motivo) {
+    localStorage.removeItem("token");
 
-  function carregarTransacao() {
-    const transacoesSalvas = localStorage.getItem(STORAGE_KEY);
-
-    if (transacoesSalvas) {
-      transacoes.push(...JSON.parse(transacoesSalvas));
+    if (motivo) {
+      localStorage.setItem("logoutMessage", motivo);
     }
+
+    window.location.href = "login.html";
   }
 
-  function criarTransacao(dados) {
-    return {
-      id: crypto.randomUUID(),
-      descricao: dados.descricao,
-      valor: dados.valor,
-      tipo: dados.tipo,
-      categoria: dados.categoria,
-      data: dados.data,
-    };
+  async function carregarTransacao(token) {
+    try {
+      const response = await fetch(`${API_BASE}/transactions`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        mensagem.textContent = data.erro || "Erro ao carregar transacoes";
+        return;
+      }
+
+      transacoes.length = 0;
+      transacoes.push(...data);
+
+      renderizarLista();
+      carregarResumo(token);
+    } catch (error) {
+      mensagem.textContent = "Falha ao conectar no servidor";
+    }
   }
 
   function lerFormulario() {
@@ -67,7 +101,7 @@ function financas() {
     valorInput.value = transacao.valor;
     tipoInput.value = transacao.tipo;
     categoriaInput.value = transacao.categoria;
-    dataInput.value = transacao.data;
+    dataInput.value = String(transacao.data).slice(0, 10);
   }
 
   function sairModoEdicao() {
@@ -78,6 +112,10 @@ function financas() {
   function entrarModoEdicao() {
     titleForm.textContent = "Editando";
     form.classList.add("editando");
+  }
+
+  function formatarData(data) {
+    return new Date(data).toISOString().split("T")[0];
   }
 
   function renderizarLista() {
@@ -100,7 +138,7 @@ function financas() {
 
       const small = document.createElement("small");
       small.classList.add("meta");
-      small.textContent = ` ${obj.categoria} • ${obj.data}`;
+      small.textContent = ` ${obj.categoria} • ${formatarData(obj.data)}`;
 
       const acoes = document.createElement("div");
       acoes.classList.add("acoes");
@@ -124,12 +162,12 @@ function financas() {
 
       const btnRemover = document.createElement("button");
       btnRemover.textContent = "Remover";
-      btnRemover.dataset.id = obj.id;
+      btnRemover.dataset.id = obj._id;
       btnRemover.dataset.acao = "remover";
 
       const btnEditar = document.createElement("button");
       btnEditar.textContent = "Editar";
-      btnEditar.dataset.id = obj.id;
+      btnEditar.dataset.id = obj._id;
       btnEditar.dataset.acao = "editar";
 
       buttons.appendChild(btnEditar);
@@ -153,66 +191,75 @@ function financas() {
     }).format(valor);
   }
 
-  function atualizarResumo() {
-    let entradas = 0;
-    let saidas = 0;
+  async function carregarResumo(token) {
+    try {
+      const response = await fetch(`${API_BASE}/summary`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    transacoes.forEach((obj) => {
-      if (obj.tipo === "entrada") {
-        entradas += obj.valor;
+      const data = await response.json();
+
+      if (!response.ok) {
+        mensagem.textContent = data.erro;
+        return;
       }
 
-      if (obj.tipo === "saida") {
-        saidas += obj.valor;
-      }
-    });
+      totalSaldo.classList.remove("saldo-positivo");
+      totalSaldo.classList.remove("saldo-negativo");
 
-    let saldo = entradas - saidas;
+      data.saldo >= 0
+        ? totalSaldo.classList.add("saldo-positivo")
+        : totalSaldo.classList.add("saldo-negativo");
 
-    totalSaldo.classList.remove("saldo-positivo");
-    totalSaldo.classList.remove("saldo-negativo");
-
-    saldo >= 0
-      ? totalSaldo.classList.add("saldo-positivo")
-      : totalSaldo.classList.add("saldo-negativo");
-
-    totalEntradas.textContent = formatarMoeda(entradas);
-    totalSaidas.textContent = formatarMoeda(saidas);
-    totalSaldo.textContent = formatarMoeda(saldo);
+      totalEntradas.textContent = formatarMoeda(data.entradas);
+      totalSaidas.textContent = formatarMoeda(data.saidas);
+      totalSaldo.textContent = formatarMoeda(data.saldo);
+    } catch (error) {
+      mensagem.textContent = "Falha ao conectar no servidor";
+    }
   }
 
-  lista.addEventListener("click", (e) => {
+  lista.addEventListener("click", async (e) => {
     if (!e.target.matches("button")) return;
 
     const id = e.target.dataset.id;
     const acao = e.target.dataset.acao;
 
     if (acao === "editar") {
-      const editTrans = transacoes.find((t) => t.id === id);
+      const editTrans = transacoes.find((t) => t._id === id);
       if (!editTrans) return;
 
       idEmEdicao = id;
       entrarModoEdicao();
-
       preencherFormulario(editTrans);
 
       return;
     }
 
     if (acao === "remover") {
-      const indiceReal = transacoes.findIndex((transfer) => transfer.id === id);
-      if (indiceReal === -1) return;
+      const res = await fetch(`${API_BASE}/transactions/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      transacoes.splice(indiceReal, 1);
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        mensagem.textContent = data.erro || "Erro ao remover transação";
+        return;
+      }
 
-      salvarTransacao();
+      const indice = transacoes.findIndex((t) => (t.id || t._id) === id);
+      if (indice !== -1) transacoes.splice(indice, 1);
 
       renderizarLista();
-      atualizarResumo();
+      carregarResumo(token);
     }
   });
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const dados = lerFormulario();
@@ -226,24 +273,54 @@ function financas() {
     mensagem.textContent = "";
 
     if (idEmEdicao === null) {
-      const transacao = criarTransacao(dados);
-      transacoes.push(transacao);
-    } else {
-      const indice = transacoes.findIndex((i) => i.id === idEmEdicao);
-      if (indice === -1) return;
+      const res = await fetch(`${API_BASE}/transactions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(dados),
+      });
 
-      transacoes[indice] = { ...transacoes[indice], ...dados };
+      const created = await res.json();
+
+      if (!res.ok) {
+        mensagem.textContent = created.erro || "Erro ao criar transação";
+        return;
+      }
+
+      transacoes.push(created);
+    } else {
+      const res = await fetch(`${API_BASE}/transactions/${idEmEdicao}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(dados),
+      });
+
+      const updated = await res.json();
+
+      if (!res.ok) {
+        mensagem.textContent = updated.erro || "Erro ao editar transação";
+        return;
+      }
+
+      const indice = transacoes.findIndex((t) => t._id === updated._id);
+      if (indice !== -1) {
+        transacoes[indice] = updated;
+      }
     }
 
     idEmEdicao = null;
     sairModoEdicao();
 
-    salvarTransacao();
-
     form.reset();
 
     renderizarLista();
-    atualizarResumo();
+    carregarResumo(token);
+    carregarTransacao(token);
   });
 
   btnCancelar.addEventListener("click", () => {
@@ -252,6 +329,12 @@ function financas() {
     form.reset();
     mensagem.textContent = "";
   });
+
+  btnLogout.addEventListener("click", () => {
+
+    
+    logout("logout realizado");
+  });
 }
 
-financas();
+init();

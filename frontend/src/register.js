@@ -1,7 +1,7 @@
 const formLogin = document.querySelector("#formLogin");
 const msg = document.querySelector("#msg");
 
-const API_BASE = "http://localhost:3000";
+const API_BASE = "/api";
 
 formLogin.addEventListener("submit", async (e) => {
   e.preventDefault();

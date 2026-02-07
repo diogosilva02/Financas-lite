@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:3000";
+const API_BASE = "/api";
 
 async function init() {
   const token = localStorage.getItem("token");
@@ -39,9 +39,8 @@ function financas(token) {
 
   const transacoes = [];
   let idEmEdicao = null;
-  renderizarLista();
+
   carregarTransacao(token);
-  carregarResumo(token);
 
   function logout(motivo) {
     localStorage.removeItem("token");
@@ -70,8 +69,7 @@ function financas(token) {
       transacoes.length = 0;
       transacoes.push(...data);
 
-      renderizarLista();
-      carregarResumo(token);
+      refreshUI();
     } catch (error) {
       mensagem.textContent = "Falha ao conectar no servidor";
     }
@@ -145,7 +143,7 @@ function financas(token) {
 
       const valor = document.createElement("span");
       valor.classList.add("valor");
-      valor.textContent = `R$ ${obj.valor} `;
+      valor.textContent = formatarMoeda(obj.valor);
 
       const tipo = document.createElement("span");
       tipo.classList.add("tipo");
@@ -182,6 +180,11 @@ function financas(token) {
       li.appendChild(acoes);
       lista.appendChild(li);
     });
+  }
+
+  function refreshUI() {
+    renderizarLista();
+    carregarResumo(token);
   }
 
   function formatarMoeda(valor) {
@@ -251,11 +254,10 @@ function financas(token) {
         return;
       }
 
-      const indice = transacoes.findIndex((t) => (t.id || t._id) === id);
+      const indice = transacoes.findIndex((t) => t._id === id);
       if (indice !== -1) transacoes.splice(indice, 1);
 
-      renderizarLista();
-      carregarResumo(token);
+      refreshUI();
     }
   });
 
@@ -318,9 +320,7 @@ function financas(token) {
 
     form.reset();
 
-    renderizarLista();
-    carregarResumo(token);
-    carregarTransacao(token);
+    refreshUI();
   });
 
   btnCancelar.addEventListener("click", () => {
@@ -331,8 +331,6 @@ function financas(token) {
   });
 
   btnLogout.addEventListener("click", () => {
-
-    
     logout("logout realizado");
   });
 }

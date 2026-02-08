@@ -49,7 +49,7 @@ formLogin.addEventListener("submit", async (e) => {
     msg.textContent = "Cadastro realizado! Redirecionando...";
 
     setTimeout(() => {
-      window.location.href = "login.html";
+      window.location.href = "/login";
     }, 1000);
   } catch (error) {
     msg.textContent = "Falha de conexão com o servidor";

@@ -45,7 +45,7 @@ formLogin.addEventListener("submit", async (e) => {
 
     localStorage.setItem("token", data.token);
 
-    window.location.href = "index.html";
+    window.location.href = "/dashboard";
   } catch (error) {
     msg.textContent = "Falha de conexão com o servidor";
   }

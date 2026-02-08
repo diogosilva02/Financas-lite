@@ -3,7 +3,7 @@ const API_BASE = "/api";
 async function init() {
   const token = localStorage.getItem("token");
   if (!token) {
-    window.location.href = "login.html";
+    window.location.href = "/login";
     return;
   }
 
@@ -14,7 +14,7 @@ async function init() {
 
   if (!res.ok) {
     localStorage.removeItem("token");
-    window.location.href = "login.html";
+    window.location.href = "/login";
     return;
   }
 
@@ -49,7 +49,7 @@ function financas(token) {
       localStorage.setItem("logoutMessage", motivo);
     }
 
-    window.location.href = "login.html";
+    window.location.href = "/login";
   }
 
   async function carregarTransacao(token) {

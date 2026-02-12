@@ -41,6 +41,7 @@ formLogin.addEventListener("submit", async (e) => {
 
     if (!data.token) {
       msg.textContent = data.erro;
+      return;
     }
 
     localStorage.setItem("token", data.token);

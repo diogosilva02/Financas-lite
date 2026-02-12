@@ -40,27 +40,28 @@ O projeto conta com autenticação, persistência de dados e resumo financeiro.
 
 ## 📂 Estrutura do Projeto
 
+```text
 financas-lite/
 ├── backend/
-│ ├── src/
-│ │ ├── controllers/
-│ │ ├── middlewares/
-│ │ ├── models/
-│ │ ├── routes/
-│ │ └── config/
-│ └── server.js
+│   ├── src/
+│   │   ├── controllers/
+│   │   ├── middlewares/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   └── config/
+│   └── server.js
 │
 ├── frontend/
-│ ├── index.html
-│ ├── login.html
-│ ├── register.html
-│ ├── main.js
-│ └── main.css
-│ └── login.css
+│   ├── index.html
+│   ├── login.html
+│   ├── register.html
+│   ├── main.js
+│   ├── main.css
+│   └── login.css
 │
 ├── .env.example
-├── package.json
 └── README.md
+```
 
 ---
 
